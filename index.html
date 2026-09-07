@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Labirintus játék</title>
+  <style>
+    body { 
+      font-family: Arial; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      height: 100vh; 
+      background: #eee;
+    }
+    canvas {
+      border: 3px solid #000;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="maze" width="400" height="400"></canvas>
+
+<script>
+  const canvas = document.getElementById("maze");
+  const ctx = canvas.getContext("2d");
+
+  const tileSize = 40;
+
+  // 0 = út, 1 = fal, 2 = cél
+  const maze = [
+    [1,1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,1,0,0,0,0,1],
+    [1,0,1,0,1,0,1,1,0,1],
+    [1,0,1,0,0,0,0,1,0,1],
+    [1,0,1,1,1,1,0,1,0,1],
+    [1,0,0,0,0,1,0,1,0,1],
+    [1,1,1,1,0,1,0,1,0,1],
+    [1,0,0,1,0,0,0,0,0,1],
+    [1,0,1,1,1,1,1,1,2,1],
+    [1,1,1,1,1,1,1,1,1,1]
+  ];
+
+  let player = { x: 1, y: 1 };
+
+  function drawMaze() {
+    for (let y = 0; y < maze.length; y++) {
+      for (let x = 0; x < maze[y].length; x++) {
+        if (maze[y][x] === 1) {
+          ctx.fillStyle = "black"; // fal
+        } else if (maze[y][x] === 2) {
+          ctx.fillStyle = "red"; // cél
+        } else {
+          ctx.fillStyle = "white"; // út
+        }
+        ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+      }
+    }
+
+    // játékos
+    ctx.fillStyle = "green";
+    ctx.fillRect(player.x * tileSize, player.y * tileSize, tileSize, tileSize);
+  }
+
+  function move(dx, dy) {
+    const newX = player.x + dx;
+    const newY = player.y + dy;
+
+    if (maze[newY][newX] !== 1) {
+      player.x = newX;
+      player.y = newY;
+
+      if (maze[newY][newX] === 2) {
+        alert("Gratulálok, kijutottál a labirintusból!");
+      }
+    }
+
+    drawMaze();
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowUp") move(0, -1);
+    if (e.key === "ArrowDown") move(0, 1);
+    if (e.key === "ArrowLeft") move(-1, 0);
+    if (e.key === "ArrowRight") move(1, 0);
+  });
+
+  drawMaze();
+</script>
+
+</body>
+</html>
